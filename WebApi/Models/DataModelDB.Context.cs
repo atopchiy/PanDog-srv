@@ -25,7 +25,10 @@ namespace WebApi.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Cart> Cart { get; set; }
         public virtual DbSet<PanDogUser> PanDogUser { get; set; }
+        public virtual DbSet<Product> Product { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
+        public virtual DbSet<Photo> Photo { get; set; }
     }
 }

@@ -12,16 +12,12 @@ namespace WebApi.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class PanDogUser
+    public partial class Photo
     {
-        public int UserId { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public int UserInfoId { get; set; }
-        public bool IsAuth { get; set; }
-        public int CartID { get; set; }
+        public int photoId { get; set; }
+        public string src { get; set; }
+        public int productId { get; set; }
     
-        public virtual Cart Cart { get; set; }
-        public virtual UserInfo UserInfo { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

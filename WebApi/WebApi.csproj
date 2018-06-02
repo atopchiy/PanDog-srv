@@ -102,57 +102,69 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Models\DBModel.Context.tt">
+    <Content Include="Models\DataModelDB.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DBModel.edmx</DependentUpon>
-      <LastGenOutput>DBModel.Context.cs</LastGenOutput>
+      <DependentUpon>DataModelDB.edmx</DependentUpon>
+      <LastGenOutput>DataModelDB.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\DBModel.tt">
+    <Content Include="Models\DataModelDB.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DBModel.edmx</DependentUpon>
-      <LastGenOutput>DBModel.cs</LastGenOutput>
+      <DependentUpon>DataModelDB.edmx</DependentUpon>
+      <LastGenOutput>DataModelDB.cs</LastGenOutput>
     </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\RegistrationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\DBModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DBModel.Context.tt</DependentUpon>
+    <Compile Include="Models\Cart.cs">
+      <DependentUpon>DataModelDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DBModel.cs">
+    <Compile Include="Models\CartModel.cs" />
+    <Compile Include="Models\DataModelDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DBModel.tt</DependentUpon>
+      <DependentUpon>DataModelDB.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DBModel.Designer.cs">
+    <Compile Include="Models\DataModelDB.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DBModel.edmx</DependentUpon>
+      <DependentUpon>DataModelDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DataModelDB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataModelDB.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\LoginUser.cs" />
     <Compile Include="Models\PanDogUser.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
+      <DependentUpon>DataModelDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Photo.cs">
+      <DependentUpon>DataModelDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Product.cs">
+      <DependentUpon>DataModelDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\UserInfo.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
+      <DependentUpon>DataModelDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="Models\DBModel.edmx">
+    <EntityDeploy Include="Models\DataModelDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>DBModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>DataModelDB.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\DBModel.edmx.diagram">
-      <DependentUpon>DBModel.edmx</DependentUpon>
+    <Content Include="Models\DataModelDB.edmx.diagram">
+      <DependentUpon>DataModelDB.edmx</DependentUpon>
     </Content>
     <None Include="packages.config" />
     <None Include="Web.Debug.config">

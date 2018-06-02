@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3ec4a81cb5c5471f83da41fff64feb9a" Name="Diagram1">
+        <EntityTypeShape EntityType="PanDogDBModel.Cart" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PanDogDBModel.PanDogUser" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="PanDogDBModel.Product" Width="1.5" PointX="5.625" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PanDogDBModel.UserInfo" Width="1.5" PointX="1.125" PointY="3.25" IsExpanded="true" />
+        <AssociationConnector Association="PanDogDBModel.FK_PanDogUser_Cart" ManuallyRouted="false" />
+        <AssociationConnector Association="PanDogDBModel.FK_PanDogUser_UserInfo" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="PanDogDBModel.Photo" Width="1.5" PointX="7.875" PointY="1.375" />
+        <AssociationConnector Association="PanDogDBModel.FK_Photo_Product" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

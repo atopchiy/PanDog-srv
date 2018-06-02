@@ -13,16 +13,19 @@ namespace WebApi.Controllers
         private PanDogDBEntities2 dBEntities = new PanDogDBEntities2();
         [HttpPost]
         [Route("api/login")]
-        public int Login(LoginUser loginUser)
+        public PanDogUser Login(LoginUser loginUser)
         {
-            var checkUser = dBEntities.PanDogUser.Select(x => x).FirstOrDefault(x => x.Login.Equals(loginUser.Login));
+            var checkUser = dBEntities.PanDogUser.Select(x => x).FirstOrDefault(x => x.UserInfo.email.Equals(loginUser.Email));
             if (checkUser != null)
             {
                 if (checkUser.Password.Equals(loginUser.Password))
-                    return checkUser.UserId;
-                else return 0;
+                {
+                    checkUser.IsAuth = true;
+                    return checkUser;
+                }
+                else return null;
             }
-            else return -1;
+            else return  null;
                 
         }
     }
