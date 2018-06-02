@@ -4,12 +4,13 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="PanDogDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="PanDogDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Cart">
           <Key>
             <PropertyRef Name="CartID" />
           </Key>
           <Property Name="CartID" Type="int" Nullable="false" />
+          <Property Name="userId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="PanDogUser">
           <Key>
@@ -20,7 +21,6 @@
           <Property Name="Password" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="UserInfoId" Type="int" Nullable="false" />
           <Property Name="IsAuth" Type="bit" Nullable="false" />
-          <Property Name="CartID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Photo">
           <Key>
@@ -43,9 +43,18 @@
           <Property Name="cost" Type="float" Nullable="false" />
           <Property Name="available" Type="bit" Nullable="false" />
           <Property Name="location" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="photos" Type="nchar" MaxLength="10" />
           <Property Name="discount" Type="int" Nullable="false" />
-          <Property Name="reviews" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="cartId" Type="int" />
+        </EntityType>
+        <EntityType Name="Review">
+          <Key>
+            <PropertyRef Name="reviewId" />
+          </Key>
+          <Property Name="reviewId" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="message" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="date" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="productId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="UserInfo">
           <Key>
@@ -61,15 +70,15 @@
           <Property Name="street" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="index" Type="nchar" MaxLength="10" Nullable="false" />
         </EntityType>
-        <Association Name="FK_PanDogUser_Cart">
-          <End Role="Cart" Type="Self.Cart" Multiplicity="1" />
-          <End Role="PanDogUser" Type="Self.PanDogUser" Multiplicity="*" />
+        <Association Name="FK_Cart_PanDogUser">
+          <End Role="PanDogUser" Type="Self.PanDogUser" Multiplicity="1" />
+          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Cart">
-              <PropertyRef Name="CartID" />
+            <Principal Role="PanDogUser">
+              <PropertyRef Name="UserId" />
             </Principal>
-            <Dependent Role="PanDogUser">
-              <PropertyRef Name="CartID" />
+            <Dependent Role="Cart">
+              <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -97,15 +106,40 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Product_Cart">
+          <End Role="Cart" Type="Self.Cart" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cart">
+              <PropertyRef Name="CartID" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="cartId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Review_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Review" Type="Self.Review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Review">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="PanDogDBModelStoreContainer">
           <EntitySet Name="Cart" EntityType="Self.Cart" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PanDogUser" EntityType="Self.PanDogUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Photo" EntityType="Self.Photo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Review" EntityType="Self.Review" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_PanDogUser_Cart" Association="Self.FK_PanDogUser_Cart">
-            <End Role="Cart" EntitySet="Cart" />
+          <AssociationSet Name="FK_Cart_PanDogUser" Association="Self.FK_Cart_PanDogUser">
             <End Role="PanDogUser" EntitySet="PanDogUser" />
+            <End Role="Cart" EntitySet="Cart" />
           </AssociationSet>
           <AssociationSet Name="FK_PanDogUser_UserInfo" Association="Self.FK_PanDogUser_UserInfo">
             <End Role="UserInfo" EntitySet="UserInfo" />
@@ -115,8 +149,17 @@
             <End Role="Product" EntitySet="Product" />
             <End Role="Photo" EntitySet="Photo" />
           </AssociationSet>
+          <AssociationSet Name="FK_Product_Cart" Association="Self.FK_Product_Cart">
+            <End Role="Cart" EntitySet="Cart" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Review_Product" Association="Self.FK_Review_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Review" EntitySet="Review" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PanDogDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -125,7 +168,9 @@
             <PropertyRef Name="CartID" />
           </Key>
           <Property Name="CartID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="PanDogUser" Relationship="Self.FK_PanDogUser_Cart" FromRole="Cart" ToRole="PanDogUser" />
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PanDogUser" Relationship="Self.FK_Cart_PanDogUser" FromRole="Cart" ToRole="PanDogUser" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Product_Cart" FromRole="Cart" ToRole="Product" />
         </EntityType>
         <EntityType Name="PanDogUser">
           <Key>
@@ -136,9 +181,17 @@
           <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="UserInfoId" Type="Int32" Nullable="false" />
           <Property Name="IsAuth" Type="Boolean" Nullable="false" />
-          <Property Name="CartID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Cart" Relationship="Self.FK_PanDogUser_Cart" FromRole="PanDogUser" ToRole="Cart" />
+          <NavigationProperty Name="Cart" Relationship="Self.FK_Cart_PanDogUser" FromRole="PanDogUser" ToRole="Cart" />
           <NavigationProperty Name="UserInfo" Relationship="Self.FK_PanDogUser_UserInfo" FromRole="PanDogUser" ToRole="UserInfo" />
+        </EntityType>
+        <EntityType Name="Photo">
+          <Key>
+            <PropertyRef Name="photoId" />
+          </Key>
+          <Property Name="photoId" Type="Int32" Nullable="false" />
+          <Property Name="src" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="productId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Photo_Product" FromRole="Photo" ToRole="Product" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -153,10 +206,22 @@
           <Property Name="cost" Type="Double" Nullable="false" />
           <Property Name="available" Type="Boolean" Nullable="false" />
           <Property Name="location" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="photos" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="discount" Type="Int32" Nullable="false" />
-          <Property Name="reviews" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Photo" Relationship="PanDogDBModel.FK_Photo_Product" FromRole="Product" ToRole="Photo" />
+          <Property Name="cartId" Type="Int32" />
+          <NavigationProperty Name="Cart" Relationship="Self.FK_Product_Cart" FromRole="Product" ToRole="Cart" />
+          <NavigationProperty Name="Photo" Relationship="Self.FK_Photo_Product" FromRole="Product" ToRole="Photo" />
+          <NavigationProperty Name="Review" Relationship="Self.FK_Review_Product" FromRole="Product" ToRole="Review" />
+        </EntityType>
+        <EntityType Name="Review">
+          <Key>
+            <PropertyRef Name="reviewId" />
+          </Key>
+          <Property Name="reviewId" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="message" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="date" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="productId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Review_Product" FromRole="Review" ToRole="Product" />
         </EntityType>
         <EntityType Name="UserInfo">
           <Key>
@@ -173,15 +238,27 @@
           <Property Name="index" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
           <NavigationProperty Name="PanDogUser" Relationship="Self.FK_PanDogUser_UserInfo" FromRole="UserInfo" ToRole="PanDogUser" />
         </EntityType>
-        <Association Name="FK_PanDogUser_Cart">
-          <End Role="Cart" Type="Self.Cart" Multiplicity="1" />
-          <End Role="PanDogUser" Type="Self.PanDogUser" Multiplicity="*" />
+        <Association Name="FK_Cart_PanDogUser">
+          <End Role="PanDogUser" Type="Self.PanDogUser" Multiplicity="1" />
+          <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PanDogUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Cart">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Cart">
+          <End Role="Cart" Type="Self.Cart" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Cart">
               <PropertyRef Name="CartID" />
             </Principal>
-            <Dependent Role="PanDogUser">
-              <PropertyRef Name="CartID" />
+            <Dependent Role="Product">
+              <PropertyRef Name="cartId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -197,37 +274,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="PanDogDBEntities2" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Cart" EntityType="Self.Cart" />
-          <EntitySet Name="PanDogUser" EntityType="Self.PanDogUser" />
-          <EntitySet Name="Product" EntityType="Self.Product" />
-          <EntitySet Name="UserInfo" EntityType="Self.UserInfo" />
-          <AssociationSet Name="FK_PanDogUser_Cart" Association="Self.FK_PanDogUser_Cart">
-            <End Role="Cart" EntitySet="Cart" />
-            <End Role="PanDogUser" EntitySet="PanDogUser" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PanDogUser_UserInfo" Association="Self.FK_PanDogUser_UserInfo">
-            <End Role="UserInfo" EntitySet="UserInfo" />
-            <End Role="PanDogUser" EntitySet="PanDogUser" />
-          </AssociationSet>
-          <EntitySet Name="Photo" EntityType="PanDogDBModel.Photo" />
-          <AssociationSet Name="FK_Photo_Product" Association="PanDogDBModel.FK_Photo_Product">
-            <End Role="Product" EntitySet="Product" />
-            <End Role="Photo" EntitySet="Photo" />
-          </AssociationSet>
-        </EntityContainer>
-        <EntityType Name="Photo">
-          <Key>
-            <PropertyRef Name="photoId" />
-          </Key>
-          <Property Name="photoId" Type="Int32" Nullable="false" />
-          <Property Name="src" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="productId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Product" Relationship="PanDogDBModel.FK_Photo_Product" FromRole="Photo" ToRole="Product" />
-        </EntityType>
         <Association Name="FK_Photo_Product">
-          <End Type="PanDogDBModel.Product" Role="Product" Multiplicity="1" />
-          <End Type="PanDogDBModel.Photo" Role="Photo" Multiplicity="*" />
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Photo" Type="Self.Photo" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
               <PropertyRef Name="ID" />
@@ -237,16 +286,57 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Review_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Review" Type="Self.Review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Review">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PanDogDBEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Cart" EntityType="Self.Cart" />
+          <EntitySet Name="PanDogUser" EntityType="Self.PanDogUser" />
+          <EntitySet Name="Photo" EntityType="Self.Photo" />
+          <EntitySet Name="Product" EntityType="Self.Product" />
+          <EntitySet Name="Review" EntityType="Self.Review" />
+          <EntitySet Name="UserInfo" EntityType="Self.UserInfo" />
+          <AssociationSet Name="FK_Cart_PanDogUser" Association="Self.FK_Cart_PanDogUser">
+            <End Role="PanDogUser" EntitySet="PanDogUser" />
+            <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Cart" Association="Self.FK_Product_Cart">
+            <End Role="Cart" EntitySet="Cart" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PanDogUser_UserInfo" Association="Self.FK_PanDogUser_UserInfo">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="PanDogUser" EntitySet="PanDogUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Photo_Product" Association="Self.FK_Photo_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Photo" EntitySet="Photo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Review_Product" Association="Self.FK_Review_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Review" EntitySet="Review" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="PanDogDBModelStoreContainer" CdmEntityContainer="PanDogDBEntities2">
+        <EntityContainerMapping StorageEntityContainer="PanDogDBModelStoreContainer" CdmEntityContainer="PanDogDBEntities1">
           <EntitySetMapping Name="Cart">
             <EntityTypeMapping TypeName="PanDogDBModel.Cart">
               <MappingFragment StoreEntitySet="Cart">
                 <ScalarProperty Name="CartID" ColumnName="CartID" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -258,7 +348,15 @@
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="UserInfoId" ColumnName="UserInfoId" />
                 <ScalarProperty Name="IsAuth" ColumnName="IsAuth" />
-                <ScalarProperty Name="CartID" ColumnName="CartID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Photo">
+            <EntityTypeMapping TypeName="PanDogDBModel.Photo">
+              <MappingFragment StoreEntitySet="Photo">
+                <ScalarProperty Name="photoId" ColumnName="photoId" />
+                <ScalarProperty Name="src" ColumnName="src" />
+                <ScalarProperty Name="productId" ColumnName="productId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -274,9 +372,19 @@
                 <ScalarProperty Name="cost" ColumnName="cost" />
                 <ScalarProperty Name="available" ColumnName="available" />
                 <ScalarProperty Name="location" ColumnName="location" />
-                <ScalarProperty Name="photos" ColumnName="photos" />
                 <ScalarProperty Name="discount" ColumnName="discount" />
-                <ScalarProperty Name="reviews" ColumnName="reviews" />
+                <ScalarProperty Name="cartId" ColumnName="cartId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Review">
+            <EntityTypeMapping TypeName="PanDogDBModel.Review">
+              <MappingFragment StoreEntitySet="Review">
+                <ScalarProperty Name="reviewId" ColumnName="reviewId" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="message" ColumnName="message" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="productId" ColumnName="productId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -292,15 +400,6 @@
                 <ScalarProperty Name="city" ColumnName="city" />
                 <ScalarProperty Name="street" ColumnName="street" />
                 <ScalarProperty Name="index" ColumnName="index" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Photo">
-            <EntityTypeMapping TypeName="PanDogDBModel.Photo">
-              <MappingFragment StoreEntitySet="Photo">
-                <ScalarProperty Name="productId" ColumnName="productId" />
-                <ScalarProperty Name="src" ColumnName="src" />
-                <ScalarProperty Name="photoId" ColumnName="photoId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

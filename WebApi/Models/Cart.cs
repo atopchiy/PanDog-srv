@@ -17,12 +17,14 @@ namespace WebApi.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Cart()
         {
-            this.PanDogUser = new HashSet<PanDogUser>();
+            this.Product = new HashSet<Product>();
         }
     
         public int CartID { get; set; }
+        public int userId { get; set; }
     
+        public virtual PanDogUser PanDogUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PanDogUser> PanDogUser { get; set; }
+        public virtual ICollection<Product> Product { get; set; }
     }
 }

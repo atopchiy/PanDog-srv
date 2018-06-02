@@ -18,6 +18,7 @@ namespace WebApi.Models
         public Product()
         {
             this.Photo = new HashSet<Photo>();
+            this.Review = new HashSet<Review>();
         }
     
         public int ID { get; set; }
@@ -29,11 +30,13 @@ namespace WebApi.Models
         public double cost { get; set; }
         public bool available { get; set; }
         public string location { get; set; }
-        public string photos { get; set; }
         public int discount { get; set; }
-        public string reviews { get; set; }
+        public Nullable<int> cartId { get; set; }
     
+        public virtual Cart Cart { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Photo> Photo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Review> Review { get; set; }
     }
 }

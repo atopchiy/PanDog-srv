@@ -14,14 +14,20 @@ namespace WebApi.Models
     
     public partial class PanDogUser
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public PanDogUser()
+        {
+            this.Cart = new HashSet<Cart>();
+        }
+    
         public int UserId { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
         public int UserInfoId { get; set; }
         public bool IsAuth { get; set; }
-        public int CartID { get; set; }
     
-        public virtual Cart Cart { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Cart> Cart { get; set; }
         public virtual UserInfo UserInfo { get; set; }
     }
 }

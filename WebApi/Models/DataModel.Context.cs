@@ -13,10 +13,10 @@ namespace WebApi.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class PanDogDBEntities2 : DbContext
+    public partial class PanDogDBEntities1 : DbContext
     {
-        public PanDogDBEntities2()
-            : base("name=PanDogDBEntities2")
+        public PanDogDBEntities1()
+            : base("name=PanDogDBEntities1")
         {
         }
     
@@ -27,8 +27,9 @@ namespace WebApi.Models
     
         public virtual DbSet<Cart> Cart { get; set; }
         public virtual DbSet<PanDogUser> PanDogUser { get; set; }
-        public virtual DbSet<Product> Product { get; set; }
-        public virtual DbSet<UserInfo> UserInfo { get; set; }
         public virtual DbSet<Photo> Photo { get; set; }
+        public virtual DbSet<Product> Product { get; set; }
+        public virtual DbSet<Review> Review { get; set; }
+        public virtual DbSet<UserInfo> UserInfo { get; set; }
     }
 }

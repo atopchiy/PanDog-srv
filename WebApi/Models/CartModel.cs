@@ -7,8 +7,8 @@ namespace WebApi.Models
 {
     public class CartModel
     {
-        public int id { get; set; }
-        public List<ProductModel> products;
-
+        public List<ProductModel> products { get; set; }
+        public int UserId { get; set; }
+        public int Amount { get; set; }
     }
 }

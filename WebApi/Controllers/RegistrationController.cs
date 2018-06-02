@@ -13,12 +13,11 @@ namespace WebApi.Controllers
 {
     public class RegistrationController : ApiController
     {
-        private PanDogDBEntities2 dBEntities = new PanDogDBEntities2();
+        private PanDogDBEntities1 dBEntities = new PanDogDBEntities1();
         [HttpPost]
         [Route("api/registration")]
         public UserInfo Register(UserModel model)
         {
-            var cart = new Cart();
             var userInfo = new UserInfo()
             {
                 city = model.City,
@@ -31,7 +30,7 @@ namespace WebApi.Controllers
                 index = model.Index,
                 
             };
-            var user = new PanDogUser() { Login = model.Login, Password = model.Password, UserInfo = userInfo, IsAuth = false, Cart = cart };
+            var user = new PanDogUser() { Login = model.Login, Password = model.Password, UserInfo = userInfo, IsAuth = false};
             dBEntities.UserInfo.Add(userInfo);
             dBEntities.PanDogUser.Add(user);
            

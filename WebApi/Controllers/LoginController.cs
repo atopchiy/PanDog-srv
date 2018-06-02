@@ -10,7 +10,7 @@ namespace WebApi.Controllers
 {
     public class LoginController : ApiController
     {
-        private PanDogDBEntities2 dBEntities = new PanDogDBEntities2();
+        private PanDogDBEntities1 dBEntities = new PanDogDBEntities1();
         [HttpPost]
         [Route("api/login")]
         public PanDogUser Login(LoginUser loginUser)
