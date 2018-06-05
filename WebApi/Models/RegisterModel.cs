@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace WebApi.Models
+﻿namespace WebApi.Models
 {
-    public class UserModel
+    public class RegisterModel
     {
-        public int Id { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string AgainPassword { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string City { get; set; }
@@ -16,7 +12,6 @@ namespace WebApi.Models
         public string Login { get; set; }
         public string Street { get; set; }
         public string Phone { get; set; }
-        public List<CartModel> orders { get; set; }
-        public List<ForumSubjectModel> subjects { get; set; }
+
     }
 }

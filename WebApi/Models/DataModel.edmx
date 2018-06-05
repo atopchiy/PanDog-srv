@@ -4,12 +4,31 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="PanDogDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="PanDogDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Cart">
           <Key>
             <PropertyRef Name="CartID" />
           </Key>
           <Property Name="CartID" Type="int" Nullable="false" />
+          <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="amount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ForumMessage">
+          <Key>
+            <PropertyRef Name="messageId" />
+          </Key>
+          <Property Name="messageId" Type="int" Nullable="false" />
+          <Property Name="messageContent" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="subjectId" Type="int" Nullable="false" />
+          <Property Name="userid" Type="int" Nullable="false" />
+          <Property Name="date" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ForumSubject">
+          <Key>
+            <PropertyRef Name="subjectId" />
+          </Key>
+          <Property Name="subjectId" Type="int" Nullable="false" />
+          <Property Name="subjectName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="PanDogUser">
@@ -82,6 +101,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ForumMessage_ForumSubject">
+          <End Role="ForumSubject" Type="Self.ForumSubject" Multiplicity="1" />
+          <End Role="ForumMessage" Type="Self.ForumMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ForumSubject">
+              <PropertyRef Name="subjectId" />
+            </Principal>
+            <Dependent Role="ForumMessage">
+              <PropertyRef Name="subjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ForumMessage_PanDogUser">
+          <End Role="PanDogUser" Type="Self.PanDogUser" Multiplicity="1" />
+          <End Role="ForumMessage" Type="Self.ForumMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PanDogUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ForumMessage">
+              <PropertyRef Name="userid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ForumSubject_PanDogUser">
+          <End Role="PanDogUser" Type="Self.PanDogUser" Multiplicity="1" />
+          <End Role="ForumSubject" Type="Self.ForumSubject" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PanDogUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ForumSubject">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PanDogUser_UserInfo">
           <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1" />
           <End Role="PanDogUser" Type="Self.PanDogUser" Multiplicity="*" />
@@ -132,6 +187,8 @@
         </Association>
         <EntityContainer Name="PanDogDBModelStoreContainer">
           <EntitySet Name="Cart" EntityType="Self.Cart" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ForumMessage" EntityType="Self.ForumMessage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ForumSubject" EntityType="Self.ForumSubject" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PanDogUser" EntityType="Self.PanDogUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Photo" EntityType="Self.Photo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
@@ -140,6 +197,18 @@
           <AssociationSet Name="FK_Cart_PanDogUser" Association="Self.FK_Cart_PanDogUser">
             <End Role="PanDogUser" EntitySet="PanDogUser" />
             <End Role="Cart" EntitySet="Cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForumMessage_ForumSubject" Association="Self.FK_ForumMessage_ForumSubject">
+            <End Role="ForumSubject" EntitySet="ForumSubject" />
+            <End Role="ForumMessage" EntitySet="ForumMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForumMessage_PanDogUser" Association="Self.FK_ForumMessage_PanDogUser">
+            <End Role="PanDogUser" EntitySet="PanDogUser" />
+            <End Role="ForumMessage" EntitySet="ForumMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForumSubject_PanDogUser" Association="Self.FK_ForumSubject_PanDogUser">
+            <End Role="PanDogUser" EntitySet="PanDogUser" />
+            <End Role="ForumSubject" EntitySet="ForumSubject" />
           </AssociationSet>
           <AssociationSet Name="FK_PanDogUser_UserInfo" Association="Self.FK_PanDogUser_UserInfo">
             <End Role="UserInfo" EntitySet="UserInfo" />
@@ -158,8 +227,7 @@
             <End Role="Review" EntitySet="Review" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PanDogDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -171,6 +239,29 @@
           <Property Name="userId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="PanDogUser" Relationship="Self.FK_Cart_PanDogUser" FromRole="Cart" ToRole="PanDogUser" />
           <NavigationProperty Name="Product" Relationship="Self.FK_Product_Cart" FromRole="Cart" ToRole="Product" />
+          <Property Name="amount" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ForumMessage">
+          <Key>
+            <PropertyRef Name="messageId" />
+          </Key>
+          <Property Name="messageId" Type="Int32" Nullable="false" />
+          <Property Name="messageContent" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="subjectId" Type="Int32" Nullable="false" />
+          <Property Name="userid" Type="Int32" Nullable="false" />
+          <Property Name="date" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ForumSubject" Relationship="Self.FK_ForumMessage_ForumSubject" FromRole="ForumMessage" ToRole="ForumSubject" />
+          <NavigationProperty Name="PanDogUser" Relationship="Self.FK_ForumMessage_PanDogUser" FromRole="ForumMessage" ToRole="PanDogUser" />
+        </EntityType>
+        <EntityType Name="ForumSubject">
+          <Key>
+            <PropertyRef Name="subjectId" />
+          </Key>
+          <Property Name="subjectId" Type="Int32" Nullable="false" />
+          <Property Name="subjectName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ForumMessage" Relationship="Self.FK_ForumMessage_ForumSubject" FromRole="ForumSubject" ToRole="ForumMessage" />
+          <NavigationProperty Name="PanDogUser" Relationship="Self.FK_ForumSubject_PanDogUser" FromRole="ForumSubject" ToRole="PanDogUser" />
         </EntityType>
         <EntityType Name="PanDogUser">
           <Key>
@@ -182,6 +273,8 @@
           <Property Name="UserInfoId" Type="Int32" Nullable="false" />
           <Property Name="IsAuth" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Cart" Relationship="Self.FK_Cart_PanDogUser" FromRole="PanDogUser" ToRole="Cart" />
+          <NavigationProperty Name="ForumMessage" Relationship="Self.FK_ForumMessage_PanDogUser" FromRole="PanDogUser" ToRole="ForumMessage" />
+          <NavigationProperty Name="ForumSubject" Relationship="Self.FK_ForumSubject_PanDogUser" FromRole="PanDogUser" ToRole="ForumSubject" />
           <NavigationProperty Name="UserInfo" Relationship="Self.FK_PanDogUser_UserInfo" FromRole="PanDogUser" ToRole="UserInfo" />
         </EntityType>
         <EntityType Name="Photo">
@@ -262,6 +355,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ForumMessage_ForumSubject">
+          <End Role="ForumSubject" Type="Self.ForumSubject" Multiplicity="1" />
+          <End Role="ForumMessage" Type="Self.ForumMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ForumSubject">
+              <PropertyRef Name="subjectId" />
+            </Principal>
+            <Dependent Role="ForumMessage">
+              <PropertyRef Name="subjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ForumMessage_PanDogUser">
+          <End Role="PanDogUser" Type="Self.PanDogUser" Multiplicity="1" />
+          <End Role="ForumMessage" Type="Self.ForumMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PanDogUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ForumMessage">
+              <PropertyRef Name="userid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ForumSubject_PanDogUser">
+          <End Role="PanDogUser" Type="Self.PanDogUser" Multiplicity="1" />
+          <End Role="ForumSubject" Type="Self.ForumSubject" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PanDogUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ForumSubject">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PanDogUser_UserInfo">
           <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1" />
           <End Role="PanDogUser" Type="Self.PanDogUser" Multiplicity="*" />
@@ -298,8 +427,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="PanDogDBEntities1" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="PanDogDBEntities2" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Cart" EntityType="Self.Cart" />
+          <EntitySet Name="ForumMessage" EntityType="Self.ForumMessage" />
+          <EntitySet Name="ForumSubject" EntityType="Self.ForumSubject" />
           <EntitySet Name="PanDogUser" EntityType="Self.PanDogUser" />
           <EntitySet Name="Photo" EntityType="Self.Photo" />
           <EntitySet Name="Product" EntityType="Self.Product" />
@@ -312,6 +443,18 @@
           <AssociationSet Name="FK_Product_Cart" Association="Self.FK_Product_Cart">
             <End Role="Cart" EntitySet="Cart" />
             <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForumMessage_ForumSubject" Association="Self.FK_ForumMessage_ForumSubject">
+            <End Role="ForumSubject" EntitySet="ForumSubject" />
+            <End Role="ForumMessage" EntitySet="ForumMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForumMessage_PanDogUser" Association="Self.FK_ForumMessage_PanDogUser">
+            <End Role="PanDogUser" EntitySet="PanDogUser" />
+            <End Role="ForumMessage" EntitySet="ForumMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForumSubject_PanDogUser" Association="Self.FK_ForumSubject_PanDogUser">
+            <End Role="PanDogUser" EntitySet="PanDogUser" />
+            <End Role="ForumSubject" EntitySet="ForumSubject" />
           </AssociationSet>
           <AssociationSet Name="FK_PanDogUser_UserInfo" Association="Self.FK_PanDogUser_UserInfo">
             <End Role="UserInfo" EntitySet="UserInfo" />
@@ -331,11 +474,32 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="PanDogDBModelStoreContainer" CdmEntityContainer="PanDogDBEntities1">
+        <EntityContainerMapping StorageEntityContainer="PanDogDBModelStoreContainer" CdmEntityContainer="PanDogDBEntities2">
           <EntitySetMapping Name="Cart">
             <EntityTypeMapping TypeName="PanDogDBModel.Cart">
               <MappingFragment StoreEntitySet="Cart">
+                <ScalarProperty Name="amount" ColumnName="amount" />
                 <ScalarProperty Name="CartID" ColumnName="CartID" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ForumMessage">
+            <EntityTypeMapping TypeName="PanDogDBModel.ForumMessage">
+              <MappingFragment StoreEntitySet="ForumMessage">
+                <ScalarProperty Name="messageId" ColumnName="messageId" />
+                <ScalarProperty Name="messageContent" ColumnName="messageContent" />
+                <ScalarProperty Name="subjectId" ColumnName="subjectId" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="date" ColumnName="date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ForumSubject">
+            <EntityTypeMapping TypeName="PanDogDBModel.ForumSubject">
+              <MappingFragment StoreEntitySet="ForumSubject">
+                <ScalarProperty Name="subjectId" ColumnName="subjectId" />
+                <ScalarProperty Name="subjectName" ColumnName="subjectName" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
               </MappingFragment>
             </EntityTypeMapping>

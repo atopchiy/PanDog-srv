@@ -10,23 +10,39 @@ namespace WebApi.Controllers
 {
     public class LoginController : ApiController
     {
-        private PanDogDBEntities1 dBEntities = new PanDogDBEntities1();
+        private PanDogDBEntities2 dBEntities = new PanDogDBEntities2();
         [HttpPost]
         [Route("api/login")]
-        public PanDogUser Login(LoginUser loginUser)
+        public UserModel Login(LoginUser loginUser)
         {
-            var checkUser = dBEntities.PanDogUser.Select(x => x).FirstOrDefault(x => x.UserInfo.email.Equals(loginUser.Email));
+            var checkUser = dBEntities.PanDogUser.SingleOrDefault(x => x.UserInfo.email.Equals(loginUser.Email));
+            
             if (checkUser != null)
             {
                 if (checkUser.Password.Equals(loginUser.Password))
                 {
                     checkUser.IsAuth = true;
-                    return checkUser;
+                    dBEntities.SaveChanges();
+                    var userModel = new UserModel
+                    {
+                        FirstName = checkUser.UserInfo.firstName,
+                        LastName = checkUser.UserInfo.lastName,
+                        Email = checkUser.UserInfo.email,
+                        Phone = checkUser.UserInfo.phone,
+                        Country = checkUser.UserInfo.country,
+                        City = checkUser.UserInfo.city,
+                        Street = checkUser.UserInfo.street,
+                        Index = checkUser.UserInfo.index,
+                        Login = checkUser.Login,
+                        Password = checkUser.Password,
+                        AgainPassword = checkUser.Password,
+                        Id = checkUser.UserId
+                    };
+                    return userModel;
                 }
                 else return null;
             }
             else return  null;
-                
         }
     }
 }

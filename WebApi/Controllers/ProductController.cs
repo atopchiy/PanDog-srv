@@ -10,7 +10,7 @@ namespace WebApi.Controllers
 {
     public class ProductController : ApiController
     {
-        private PanDogDBEntities1 dBEntities = new PanDogDBEntities1();
+        private PanDogDBEntities2 dBEntities = new PanDogDBEntities2();
         [HttpGet]
         [Route("api/products")]
         public List<ProductModel> GetProducts()
@@ -36,8 +36,7 @@ namespace WebApi.Controllers
                     available = product.available,
                     location = product.location,
                     cost = product.cost,
-                    reviews = product.reviews,
-                    discount = product.discount,
+                   discount = product.discount,
                     photos = srcList
                 });
             }

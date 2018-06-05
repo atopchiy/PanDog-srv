@@ -12,28 +12,20 @@ namespace WebApi.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class PanDogUser
+    public partial class ForumSubject
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PanDogUser()
+        public ForumSubject()
         {
-            this.Cart = new HashSet<Cart>();
             this.ForumMessage = new HashSet<ForumMessage>();
-            this.ForumSubject = new HashSet<ForumSubject>();
         }
     
-        public int UserId { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public int UserInfoId { get; set; }
-        public bool IsAuth { get; set; }
+        public int subjectId { get; set; }
+        public string subjectName { get; set; }
+        public int userId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Cart> Cart { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ForumMessage> ForumMessage { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ForumSubject> ForumSubject { get; set; }
-        public virtual UserInfo UserInfo { get; set; }
+        public virtual PanDogUser PanDogUser { get; set; }
     }
 }

@@ -13,10 +13,10 @@ namespace WebApi.Controllers
 {
     public class RegistrationController : ApiController
     {
-        private PanDogDBEntities1 dBEntities = new PanDogDBEntities1();
+        private PanDogDBEntities2 dBEntities = new PanDogDBEntities2();
         [HttpPost]
         [Route("api/registration")]
-        public UserInfo Register(UserModel model)
+        public UserModel Register(RegisterModel model)
         {
             var userInfo = new UserInfo()
             {
@@ -26,7 +26,7 @@ namespace WebApi.Controllers
                 firstName = model.FirstName,
                 lastName = model.LastName,
                 phone = model.Phone,
-                street = "kek",
+                street = model.Street,
                 index = model.Index,
                 
             };
@@ -55,7 +55,23 @@ namespace WebApi.Controllers
                 }
                 throw;
             }
-            return userInfo;
+            user = dBEntities.PanDogUser.SingleOrDefault(x => x.Login.Equals(model.Login));
+            var userModel = new UserModel()
+            {
+                FirstName = userInfo.firstName,
+                LastName = userInfo.lastName,
+                Email = userInfo.email,
+                Phone = userInfo.phone,
+                Country = userInfo.country,
+                City = userInfo.city,
+                Street = userInfo.street,
+                Index = userInfo.index,
+                Login = user.Login,
+                Password = user.Password,
+                AgainPassword = user.Password,
+                Id = user.UserId
+            };
+            return userModel;
         }
                 
      }
