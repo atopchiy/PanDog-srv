@@ -4,20 +4,20 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="PanDogDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="PanDogDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Cart">
           <Key>
             <PropertyRef Name="CartID" />
           </Key>
-          <Property Name="CartID" Type="int" Nullable="false" />
+          <Property Name="CartID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
-          <Property Name="amount" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ForumMessage">
           <Key>
             <PropertyRef Name="messageId" />
           </Key>
-          <Property Name="messageId" Type="int" Nullable="false" />
+          <Property Name="messageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="messageContent" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="subjectId" Type="int" Nullable="false" />
           <Property Name="userid" Type="int" Nullable="false" />
@@ -27,9 +27,19 @@
           <Key>
             <PropertyRef Name="subjectId" />
           </Key>
-          <Property Name="subjectId" Type="int" Nullable="false" />
+          <Property Name="subjectId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="subjectName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="orderId" />
+          </Key>
+          <Property Name="orderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="deliveryCost" Type="int" Nullable="false" />
+          <Property Name="itemsCost" Type="int" Nullable="false" />
+          <Property Name="grossCost" Type="int" Nullable="false" />
+          <Property Name="loginUser" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="PanDogUser">
           <Key>
@@ -45,7 +55,7 @@
           <Key>
             <PropertyRef Name="photoId" />
           </Key>
-          <Property Name="photoId" Type="int" Nullable="false" />
+          <Property Name="photoId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="src" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="productId" Type="int" Nullable="false" />
         </EntityType>
@@ -53,7 +63,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="src" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="type" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="breed" Type="varchar" MaxLength="50" Nullable="false" />
@@ -69,7 +79,7 @@
           <Key>
             <PropertyRef Name="reviewId" />
           </Key>
-          <Property Name="reviewId" Type="int" Nullable="false" />
+          <Property Name="reviewId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="message" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="date" Type="varchar" MaxLength="30" Nullable="false" />
@@ -89,6 +99,30 @@
           <Property Name="street" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="index" Type="nchar" MaxLength="10" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Cart_Cart">
+          <End Role="Cart" Type="Self.Cart" Multiplicity="1" />
+          <End Role="Cart1" Type="Self.Cart" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Cart">
+              <PropertyRef Name="CartID" />
+            </Principal>
+            <Dependent Role="Cart1">
+              <PropertyRef Name="CartID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cart_Cart1">
+          <End Role="Cart" Type="Self.Cart" Multiplicity="1" />
+          <End Role="Cart1" Type="Self.Cart" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Cart">
+              <PropertyRef Name="CartID" />
+            </Principal>
+            <Dependent Role="Cart1">
+              <PropertyRef Name="CartID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Cart_PanDogUser">
           <End Role="PanDogUser" Type="Self.PanDogUser" Multiplicity="1" />
           <End Role="Cart" Type="Self.Cart" Multiplicity="*" />
@@ -134,6 +168,18 @@
             </Principal>
             <Dependent Role="ForumSubject">
               <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_Order">
+          <End Role="Order" Type="Self.Order" Multiplicity="1" />
+          <End Role="Order1" Type="Self.Order" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="orderId" />
+            </Principal>
+            <Dependent Role="Order1">
+              <PropertyRef Name="orderId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -189,11 +235,20 @@
           <EntitySet Name="Cart" EntityType="Self.Cart" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ForumMessage" EntityType="Self.ForumMessage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ForumSubject" EntityType="Self.ForumSubject" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PanDogUser" EntityType="Self.PanDogUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Photo" EntityType="Self.Photo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Review" EntityType="Self.Review" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Cart_Cart" Association="Self.FK_Cart_Cart">
+            <End Role="Cart" EntitySet="Cart" />
+            <End Role="Cart1" EntitySet="Cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cart_Cart1" Association="Self.FK_Cart_Cart1">
+            <End Role="Cart" EntitySet="Cart" />
+            <End Role="Cart1" EntitySet="Cart" />
+          </AssociationSet>
           <AssociationSet Name="FK_Cart_PanDogUser" Association="Self.FK_Cart_PanDogUser">
             <End Role="PanDogUser" EntitySet="PanDogUser" />
             <End Role="Cart" EntitySet="Cart" />
@@ -209,6 +264,10 @@
           <AssociationSet Name="FK_ForumSubject_PanDogUser" Association="Self.FK_ForumSubject_PanDogUser">
             <End Role="PanDogUser" EntitySet="PanDogUser" />
             <End Role="ForumSubject" EntitySet="ForumSubject" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_Order" Association="Self.FK_Order_Order">
+            <End Role="Order" EntitySet="Order" />
+            <End Role="Order1" EntitySet="Order" />
           </AssociationSet>
           <AssociationSet Name="FK_PanDogUser_UserInfo" Association="Self.FK_PanDogUser_UserInfo">
             <End Role="UserInfo" EntitySet="UserInfo" />
@@ -227,7 +286,8 @@
             <End Role="Review" EntitySet="Review" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PanDogDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -235,17 +295,17 @@
           <Key>
             <PropertyRef Name="CartID" />
           </Key>
-          <Property Name="CartID" Type="Int32" Nullable="false" />
+          <Property Name="CartID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="userId" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
           <NavigationProperty Name="PanDogUser" Relationship="Self.FK_Cart_PanDogUser" FromRole="Cart" ToRole="PanDogUser" />
           <NavigationProperty Name="Product" Relationship="Self.FK_Product_Cart" FromRole="Cart" ToRole="Product" />
-          <Property Name="amount" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="ForumMessage">
           <Key>
             <PropertyRef Name="messageId" />
           </Key>
-          <Property Name="messageId" Type="Int32" Nullable="false" />
+          <Property Name="messageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="messageContent" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="subjectId" Type="Int32" Nullable="false" />
           <Property Name="userid" Type="Int32" Nullable="false" />
@@ -257,12 +317,22 @@
           <Key>
             <PropertyRef Name="subjectId" />
           </Key>
-          <Property Name="subjectId" Type="Int32" Nullable="false" />
+          <Property Name="subjectId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="subjectName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="userId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ForumMessage" Relationship="Self.FK_ForumMessage_ForumSubject" FromRole="ForumSubject" ToRole="ForumMessage" />
           <NavigationProperty Name="PanDogUser" Relationship="Self.FK_ForumSubject_PanDogUser" FromRole="ForumSubject" ToRole="PanDogUser" />
         </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="orderId" />
+          </Key>
+          <Property Name="orderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="deliveryCost" Type="Int32" Nullable="false" />
+          <Property Name="itemsCost" Type="Int32" Nullable="false" />
+          <Property Name="grossCost" Type="Int32" Nullable="false" />
+          <Property Name="loginUser" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          </EntityType>
         <EntityType Name="PanDogUser">
           <Key>
             <PropertyRef Name="UserId" />
@@ -281,7 +351,7 @@
           <Key>
             <PropertyRef Name="photoId" />
           </Key>
-          <Property Name="photoId" Type="Int32" Nullable="false" />
+          <Property Name="photoId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="src" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="productId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Product" Relationship="Self.FK_Photo_Product" FromRole="Photo" ToRole="Product" />
@@ -290,7 +360,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="src" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="breed" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
@@ -309,7 +379,7 @@
           <Key>
             <PropertyRef Name="reviewId" />
           </Key>
-          <Property Name="reviewId" Type="Int32" Nullable="false" />
+          <Property Name="reviewId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="message" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="date" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
@@ -427,10 +497,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="PanDogDBEntities2" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="PanDogDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Cart" EntityType="Self.Cart" />
           <EntitySet Name="ForumMessage" EntityType="Self.ForumMessage" />
           <EntitySet Name="ForumSubject" EntityType="Self.ForumSubject" />
+          <EntitySet Name="Order" EntityType="Self.Order" />
           <EntitySet Name="PanDogUser" EntityType="Self.PanDogUser" />
           <EntitySet Name="Photo" EntityType="Self.Photo" />
           <EntitySet Name="Product" EntityType="Self.Product" />
@@ -474,13 +545,13 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="PanDogDBModelStoreContainer" CdmEntityContainer="PanDogDBEntities2">
+        <EntityContainerMapping StorageEntityContainer="PanDogDBModelStoreContainer" CdmEntityContainer="PanDogDBEntities">
           <EntitySetMapping Name="Cart">
             <EntityTypeMapping TypeName="PanDogDBModel.Cart">
               <MappingFragment StoreEntitySet="Cart">
-                <ScalarProperty Name="amount" ColumnName="amount" />
                 <ScalarProperty Name="CartID" ColumnName="CartID" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -501,6 +572,17 @@
                 <ScalarProperty Name="subjectId" ColumnName="subjectId" />
                 <ScalarProperty Name="subjectName" ColumnName="subjectName" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Order">
+            <EntityTypeMapping TypeName="PanDogDBModel.Order">
+              <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="orderId" ColumnName="orderId" />
+                <ScalarProperty Name="deliveryCost" ColumnName="deliveryCost" />
+                <ScalarProperty Name="itemsCost" ColumnName="itemsCost" />
+                <ScalarProperty Name="grossCost" ColumnName="grossCost" />
+                <ScalarProperty Name="loginUser" ColumnName="loginUser" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

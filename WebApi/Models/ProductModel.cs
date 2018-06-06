@@ -16,6 +16,6 @@ namespace WebApi.Models
         public string location { get; set; }
         public List<string> photos { get; set; }
         public int discount { get; set; }
-        public string reviews { get; set; }
+        public List<ReviewModel> reviews { get; set; }
     }
 }

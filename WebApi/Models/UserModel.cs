@@ -16,7 +16,5 @@ namespace WebApi.Models
         public string Login { get; set; }
         public string Street { get; set; }
         public string Phone { get; set; }
-        public List<CartModel> orders { get; set; }
-        public List<ForumSubjectModel> subjects { get; set; }
-    }
+     }
 }

@@ -22,7 +22,7 @@ namespace WebApi.Models
     
         public int CartID { get; set; }
         public int userId { get; set; }
-        public int amount { get; set; }
+        public int quantity { get; set; }
     
         public virtual PanDogUser PanDogUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

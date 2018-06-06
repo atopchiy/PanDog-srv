@@ -10,7 +10,7 @@ namespace WebApi.Controllers
 {
     public class ForumController : ApiController
     {
-        private PanDogDBEntities2 dBEntities = new PanDogDBEntities2();
+        private PanDogDBEntities dBEntities = new PanDogDBEntities();
         [HttpGet]
         [Route("api/forum")]
         public List<ForumSubjectModel> GetSubjects()

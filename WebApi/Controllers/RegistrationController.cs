@@ -13,7 +13,7 @@ namespace WebApi.Controllers
 {
     public class RegistrationController : ApiController
     {
-        private PanDogDBEntities2 dBEntities = new PanDogDBEntities2();
+        private PanDogDBEntities dBEntities = new PanDogDBEntities();
         [HttpPost]
         [Route("api/registration")]
         public UserModel Register(RegisterModel model)

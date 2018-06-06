@@ -153,6 +153,10 @@
     </Compile>
     <Compile Include="Models\ForumSubjectModel.cs" />
     <Compile Include="Models\LoginUser.cs" />
+    <Compile Include="Models\Order.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\PanDogUser.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
@@ -163,13 +167,14 @@
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\RegisterModel.cs" />
     <Compile Include="Models\Review.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ReviewModel.cs" />
     <Compile Include="Models\UserInfo.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\RegisterModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

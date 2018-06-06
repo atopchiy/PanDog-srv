@@ -10,22 +10,28 @@ namespace WebApi.Controllers
 {
     public class CartController : ApiController
     {
-        private PanDogDBEntities2 dBEntities = new PanDogDBEntities2();
+        private PanDogDBEntities dBEntities = new PanDogDBEntities();
         [HttpPost]
         [Route("api/savecart")]
         public void SaveCart(CartModel cartModel)
         {
-            var products = dBEntities.Product.Select(x => x).ToList();
-            var cart = new Cart()
+           var user = dBEntities.PanDogUser.SingleOrDefault(x => x.IsAuth == true);
+           
+             var cart = new Cart()
             {
-                userId = cartModel.UserId,
-                amount = cartModel.Amount
+                userId = user.UserId,
+                quantity = cartModel.Quantity,
+               
             };
-             foreach(var product in products)
-            {
-                product.cartId = cart.CartID;
-            }
+           
             dBEntities.Cart.Add(cart);
+            cart = dBEntities.Cart.Single(x => x.userId == user.UserId);
+            foreach (var product in cartModel.products)
+            {
+                var dbProduct = dBEntities.Product.Find(product.id);
+                dbProduct.cartId = cart.CartID;
+
+            }
             dBEntities.SaveChanges();
         }
     }
